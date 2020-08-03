@@ -34,5 +34,6 @@ steps:
     publishWebProjects: false
     projects: '**/CustomerApi.csproj'
     arguments: '--configuration $(buildConfiguration) --no-restore'
-    modifyOutputPath: false
+    modifyOutputPath: false    
   displayName: 'Publish CustomerApi'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))  
