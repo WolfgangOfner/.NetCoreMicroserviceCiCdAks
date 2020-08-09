@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using AutoMapper;
 using CustomerApi.Controllers.v1;
 using CustomerApi.Data.Entities;
 using CustomerApi.Models.v1;
 using CustomerApi.Service.v1.Command;
+using CustomerApi.Service.v1.Query;
 using FakeItEasy;
 using FluentAssertions;
 using MediatR;
@@ -54,13 +56,17 @@ namespace CustomerApi.Test.Controllers.v1
             A.CallTo(() => mapper.Map<Customer>(A<Customer>._)).Returns(customer);
             A.CallTo(() => _mediator.Send(A<CreateCustomerCommand>._, default)).Returns(customer);
             A.CallTo(() => _mediator.Send(A<UpdateCustomerCommand>._, default)).Returns(customer);
+            A.CallTo(() => _mediator.Send(A<GetCustomersQuery>._, default)).Returns(new List<Customer>
+            {
+                customer
+            });
         }
 
         [Theory]
         [InlineData("CreateCustomerAsync: customer is null")]
         public async void Post_WhenAnExceptionOccurs_ShouldReturnBadRequest(string exceptionMessage)
         {
-            A.CallTo(() => _mediator.Send(A<CreateCustomerCommand>._,default)).Throws(new ArgumentException(exceptionMessage));
+            A.CallTo(() => _mediator.Send(A<CreateCustomerCommand>._, default)).Throws(new ArgumentException(exceptionMessage));
 
             var result = await _testee.Customer(_createCustomerModel);
 
@@ -99,6 +105,16 @@ namespace CustomerApi.Test.Controllers.v1
             (result.Result as StatusCodeResult)?.StatusCode.Should().Be((int)HttpStatusCode.OK);
             result.Value.Should().BeOfType<Customer>();
             result.Value.Id.Should().Be(_id);
+        }
+
+        [Fact]
+        public async void Get_ShouldReturnCustomers()
+        {
+            var result = await _testee.Customers();
+
+            (result.Result as StatusCodeResult)?.StatusCode.Should().Be((int)HttpStatusCode.OK);
+            result.Value.Should().BeOfType<List<Customer>>();
+            result.Value[0]?.Id.Should().Be(_id);
         }
     }
 }
