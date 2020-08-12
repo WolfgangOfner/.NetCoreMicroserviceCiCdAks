@@ -7,7 +7,6 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Solution/CustomerApi/CustomerApi.csproj", "Solution/CustomerApi/"]
 COPY ["Solution/CustomerApi.Domain/CustomerApi.Domain.csproj", "Solution/CustomerApi.Domain/"]
-COPY ["Solution/CustomerApi.Messaging.Send/CustomerApi.Messaging.Send.csproj", "Solution/CustomerApi.Messaging.Send/"]
 COPY ["Solution/CustomerApi.Service/CustomerApi.Service.csproj", "Solution/CustomerApi.Service/"]
 COPY ["Solution/CustomerApi.Data/CustomerApi.Data.csproj", "Solution/CustomerApi.Data/"]
 RUN dotnet restore "Solution/CustomerApi/CustomerApi.csproj"
