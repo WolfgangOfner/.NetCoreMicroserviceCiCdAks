@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CustomerApi.Data.Database;
 using CustomerApi.Data.Entities;
 using CustomerApi.Data.Repository.v1;
