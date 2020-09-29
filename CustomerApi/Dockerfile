@@ -19,9 +19,9 @@ COPY . .
 
 FROM build AS test
 LABEL test=true
-RUN dotnet test -c Release --results-directory /testresults --logger "trx;LogFileName=test_results.trx" Tests/CustomerApi.Test/CustomerApi.Test.csproj
-RUN dotnet test -c Release --results-directory /testresults --logger "trx;LogFileName=test_results2.trx" Tests/CustomerApi.Service.Test/CustomerApi.Service.Test.csproj
-RUN dotnet test -c Release --results-directory /testresults --logger "trx;LogFileName=test_results3.trx" Tests/CustomerApi.Data.Test/CustomerApi.Data.Test.csproj
+RUN dotnet test -c Release --results-directory /testresults --logger "trx;LogFileName=test_results.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=json%2cCobertura /p:CoverletOutput=/testresults/coverage/ -p:MergeWith=/testresults/coverage/coverage.json Tests/CustomerApi.Test/CustomerApi.Test.csproj 
+RUN dotnet test -c Release --results-directory /testresults --logger "trx;LogFileName=test_results2.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=json%2cCobertura /p:CoverletOutput=/testresults/coverage/ -p:MergeWith=/testresults/coverage/coverage.json Tests/CustomerApi.Service.Test/CustomerApi.Service.Test.csproj 
+RUN dotnet test -c Release --results-directory /testresults --logger "trx;LogFileName=test_results3.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=json%2cCobertura /p:CoverletOutput=/testresults/coverage/ -p:MergeWith=/testresults/coverage/coverage.json Tests/CustomerApi.Data.Test/CustomerApi.Data.Test.csproj
 
 FROM build AS publish
 RUN dotnet publish "CustomerApi/CustomerApi.csproj" --no-restore -c Release  -o /app/publish
